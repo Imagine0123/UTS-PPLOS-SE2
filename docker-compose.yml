@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  gateway:
+    build: ./gateway
+    ports:
+      - "3000:3000"
+
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - "3001:3001"
+
+  property-service:
+    build: ./services/property-service
+    ports:
+      - "8000:8000"
+
+  booking-service:
+    build: ./services/booking-service
+    ports:
+      - "3002:3002"
+
+  db-property:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: kos_db
+      MYSQL_ROOT_PASSWORD: password
