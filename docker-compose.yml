@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  gateway:
-    build: ./gateway
-    ports:
-      - "3000:3000"
+ # gateway:
+    #build: ./gateway
+    #ports:
+    #  - "3000:3000"
 
   auth-service:
     build: ./services/auth-service
@@ -16,10 +16,10 @@ services:
     ports:
       - "8000:8000"
 
-  booking-service:
-    build: ./services/booking-service
-    ports:
-      - "3002:3002"
+  #booking-service:
+    #build: ./services/booking-service
+    #ports:
+      #- "3002:3002"
 
   db-property:
     image: mysql:8.0
