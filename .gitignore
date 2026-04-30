@@ -1,0 +1,29 @@
+# --- General ---
+.DS_Store
+.env
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+
+# --- Node.js (Auth & Booking Services) ---
+**/node_modules/
+**/npm-debug.log*
+**/yarn-error.log*
+**/.pnpm-debug.log*
+
+# --- Laravel (Property Service) ---
+services/property-service/vendor/
+services/property-service/public/storage
+services/property-service/public/hot
+services/property-service/storage/*.key
+services/property-service/.phpunit.result.cache
+services/property-service/.env
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
