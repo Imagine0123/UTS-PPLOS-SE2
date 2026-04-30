@@ -14,12 +14,12 @@ services:
   property-service:
     build: ./services/property-service
     ports:
-      - "8000:8000"
+      - "3002:8000"
 
   #booking-service:
     #build: ./services/booking-service
     #ports:
-      #- "3002:3002"
+      #- "3003:3003"
 
   db-property:
     image: mysql:8.0
