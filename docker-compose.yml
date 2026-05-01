@@ -1,10 +1,14 @@
 version: '3.8'
 
 services:
- # gateway:
-    #build: ./gateway
-    #ports:
-    #  - "3000:3000"
+  gateway:
+    build: ./gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-service
+      - property-service
+      - booking-service
 
   auth-service:
     build: ./services/auth-service
