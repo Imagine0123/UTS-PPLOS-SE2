@@ -1,0 +1,6 @@
+**/node_modules
+**/vendor
+**/.git
+**/storage/*.key
+**/.env
+services/property-service/vendor
