@@ -10,27 +10,29 @@ class RoomController extends Controller
 {
     public function index(Request $request)
     {
-        //Validation
         $request->validate([
             'status' => 'nullable|in:available,occupied',
             'max_price' => 'nullable|numeric',
             'per_page' => 'nullable|integer|min:1|max:50'
         ]);
 
-        $query = Room::with(['property', 'facilities']);
-
-        //Filtering
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->max_price);
-        }
-
-        //Paging
-        $perPage = $request->input('per_page', 10);
-        $rooms = $query->paginate($perPage);
+        // We just chain the filters we made in the model!
+        $rooms = Room::with(['property', 'facilities'])
+            ->filterByStatus($request->status)
+            ->filterByMaxPrice($request->max_price)
+            ->paginate($request->input('per_page', 10));
 
         return response()->json($rooms, 200);
+    }
+
+    public function show($id)
+    {
+        $room = Room::with(['property', 'facilities'])->find($id);
+
+        if (!$room) {
+            return response()->json(['message' => 'Room not found'], 404);
+        }
+
+        return response()->json($room, 200);
     }
 }

@@ -19,4 +19,20 @@ class Room extends Model
     {
         return $this->belongsToMany(Facility::class, 'room_facility');
     }
+
+     public function scopeFilterByStatus($query, $status)
+    {
+        if ($status) {
+            return $query->where('status', $status);
+        }
+        return $query;
+    }
+
+    public function scopeFilterByMaxPrice($query, $price)
+    {
+        if ($price) {
+            return $query->where('price', '<=', $price);
+        }
+        return $query;
+    }
 }
