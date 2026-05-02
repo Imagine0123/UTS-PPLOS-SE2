@@ -38,12 +38,12 @@ app.use('/api/auth', createProxyMiddleware({
 app.use('/api/properties', verifyToken, createProxyMiddleware({ 
     target: 'http://property-service:8000', 
     changeOrigin: true,
-    pathRewrite: { '^/api/properties': '/api/rooms' } // Maps gateway path to Laravel path
+    pathRewrite: { '^/api/properties': '/api/rooms' }
 }));
 
 //Booking
 app.use('/api/bookings', verifyToken, createProxyMiddleware({ 
-    target: 'http://booking-service:3002', // Make sure this matches your internal Node port
+    target: 'http://booking-service:3002',
     changeOrigin: true 
 }));
 
