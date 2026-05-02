@@ -16,7 +16,6 @@ class RoomController extends Controller
             'per_page' => 'nullable|integer|min:1|max:50'
         ]);
 
-        // We just chain the filters we made in the model!
         $rooms = Room::with(['property', 'facilities'])
             ->filterByStatus($request->status)
             ->filterByMaxPrice($request->max_price)

@@ -12,7 +12,6 @@ const db = mysql.createPool({
     database: 'booking_db'
 });
 
-// --- NEW CODE: Auto-create the table on startup ---
 async function initializeDatabase() {
     try {
         const createTableQuery = `
@@ -33,11 +32,11 @@ async function initializeDatabase() {
 }
 initializeDatabase();
 
-app.post('/api/bookings', async (req, res) => {
+app.post('/bookings', async (req, res) => {
     const { user_id, room_id, duration_months } = req.body;
 
     try {
-        // 1. Talk to Property Service (Inter-service call)
+        //Talk to Property Service
         const response = await axios.get(`http://property-service:8000/api/rooms/${room_id}`);
         
         let rawData = response.data;
@@ -64,7 +63,6 @@ app.post('/api/bookings', async (req, res) => {
             });
         }
 
-        // Calculate the total price
         const total_price = pricePerMonth * duration_months;
 
         // 2. SAVE TO THE BOOKING DATABASE
