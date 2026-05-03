@@ -1,7 +1,7 @@
 # UTS PPLOS SE2 - Kos Management API Gateway
 
 NIM: 2310511069  
-Demo Video: 
+Demo Video: [Demo UTS-PPLOS-SE2](https://youtu.be/7mnrIZv9JRA)
 
 ## Deskripsi
 Proyek ini mengimplementasikan arsitektur API Gateway untuk Sistem Manajemen Kos. API Gateway bertugas untuk melakukan permintaan ke microservices yang sesuai di belakangnya, serta mencakup Layanan Autentikasi yang terintegrasi dengan GitHub OAuth.
