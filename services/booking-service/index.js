@@ -87,7 +87,45 @@ app.post('/bookings', async (req, res) => {
     }
 });
 
-const PORT = 3002;
-app.listen(PORT, () => {
-    console.log(`Booking Service running on port ${PORT}`);
+// GET all bookings
+app.get('/bookings', async (req, res) => {
+    try {
+        console.log("[BOOKING-SERVICE] Fetching all bookings...");
+        
+        const [rows] = await db.execute('SELECT * FROM bookings ORDER BY created_at DESC');
+        
+        res.status(200).json({
+            message: "Bookings retrieved successfully",
+            count: rows.length,
+            data: rows
+        });
+    } catch (error) {
+        console.error("[GET BOOKINGS ERROR]:", error);
+        res.status(500).json({ 
+            error: 'Failed to fetch bookings', 
+            message: error.message 
+        });
+    }
 });
+
+// GET bookings for specific user
+app.get('/bookings/my', async (req, res) => {
+    try {
+        const userId = req.headers['x-user-id'] || req.query.user_id; 
+
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+
+        const [rows] = await db.execute('SELECT * FROM bookings WHERE user_id = ?', [userId]);
+        res.status(200).json(rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+const PORT = 3002;
+(async () => {
+    await initializeDatabase();
+    app.listen(PORT, () => console.log(`Booking Service running on port ${PORT}`));
+})();

@@ -14,6 +14,18 @@ services:
     build: ./services/auth-service
     ports:
       - "3001:3001"
+    depends_on:
+      - db-auth
+    
+  db-auth:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: auth_db
+      MYSQL_ROOT_PASSWORD: authpass
+    ports:
+      - "3308:3309"
+    volumes:
+      - auth_db_data:/var/lib/mysql
 
   property-service:
     build: ./services/property-service
@@ -45,3 +57,4 @@ services:
 
 volumes:
   booking_db_data:
+  auth_db_data:

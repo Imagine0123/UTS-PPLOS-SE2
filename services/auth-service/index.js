@@ -12,10 +12,10 @@ const users = [];
 let refreshTokens = []; 
 
 const db = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST || 'db-auth',
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'kos_db',
+    password: process.env.DB_PASSWORD || 'authpass',
+    database: process.env.DB_NAME || 'auth_db',
     waitForConnections: true,
     connectionLimit: 10
 });
@@ -107,8 +107,8 @@ app.get('/github/callback', async (req, res) => {
         };
 
         let [rows] = await db.execute('SELECT * FROM users WHERE github_id = ? OR email = ?', [githubId, email]);
-        let user = rows[0];
-
+        user = rows[0];
+        
         if (!user) {
             const [result] = await db.execute(
                 'INSERT INTO users (email, role, github_id, source) VALUES (?, ?, ?, ?)',
@@ -193,5 +193,22 @@ app.delete('/logout', async (req, res) => {
     await db.execute('DELETE FROM refresh_tokens WHERE token = ?', [req.body.token]);
     res.status(204).send();
 });
+
+const startApp = async () => {
+    try {
+        console.log("Starting Auth Service...");
+        
+        await initializeDatabase(); 
+        
+        app.listen(3001, () => {
+            console.log('Auth Service is live on port 3001');
+        });
+    } catch (err) {
+        console.error("Fatal error during startup:", err);
+        process.exit(1);
+    }
+};
+
+startApp();
 
 app.listen(3001, () => console.log('Auth Service running on port 3001'));

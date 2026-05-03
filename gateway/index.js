@@ -6,6 +6,11 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 
+app.use((req, res, next) => {
+    console.log(`[GATEWAY DEBUG] Incoming Request: ${req.method} ${req.url}`);
+    next();
+});
+
 // rateLimit: 60 req/min
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
@@ -41,11 +46,24 @@ app.use('/api/properties', verifyToken, createProxyMiddleware({
     pathRewrite: { '^/api/properties': '/api/rooms' }
 }));
 
-//Booking
-app.use('/api/bookings', verifyToken, createProxyMiddleware({ 
-    target: 'http://booking-service:3002',
-    changeOrigin: true 
-}));
+// Booking
+app.use('/api/bookings', verifyToken, (req, res, next) => {
+    createProxyMiddleware({ 
+        target: 'http://booking-service:3002',
+        changeOrigin: true,
+        pathRewrite: (path, req) => {
+            console.log(`[REWRITE] Original: ${path} -> Target: /bookings`);
+            return '/bookings'; 
+        },
+        onProxyReq: (proxyReq, req, res) => {
+            console.log(`[GATEWAY] Forwarding: ${req.method} ${req.originalUrl} -> http://booking-service:3002${proxyReq.path}`);
+        },
+        onError: (err, req, res) => {
+            console.error("Proxy Error:", err);
+            res.status(500).json({ error: "Booking Service is down or unreachable" });
+        }
+    })(req, res, next);
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {
